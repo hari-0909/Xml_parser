@@ -1,34 +1,26 @@
+// client/src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+console.log('API base URL:', API_BASE_URL);
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${API_BASE_URL}/api`, // <- add /api here
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Upload XML file
 export const uploadFile = (file) => {
   const formData = new FormData();
   formData.append('file', file);
-  
+
   return api.post('/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
 };
 
-// Get all reports
-export const getAllReports = () => {
-  return api.get('/reports');
-};
-
-// Get single report by ID
-export const getReportById = (id) => {
-  return api.get(`/reports/${id}`);
-};
+export const getAllReports = () => api.get('/reports');
+export const getReportById = (id) => api.get(`/reports/${id}`);
 
 export default api;
